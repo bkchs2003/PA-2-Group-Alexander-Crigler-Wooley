@@ -1,3 +1,7 @@
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 
 public class PA2Source {
@@ -8,10 +12,17 @@ public class PA2Source {
         // List whose elements are sorted arrays
         LinkedList<double[]> sorted = new LinkedList<>();
 
+        // List whose elements are execution times
+        LinkedList<Long> times = new LinkedList<>();
+
+        // List whose elements are Strings to be in a file
+        LinkedList<String> output = new LinkedList<>();
+        output.add("Input size n for Array_i, Value of n * logn, Time spent (nanoseconds), Value of (n * logn)/time");
+
         // Creating 9 arrays
         for (int i = 1; i < 10; ++i) {
-            // Array size increases by 1000 every time
-            int length = i * 1000;
+            // Array size increases by 100000 every time
+            int length = i * 100000;
             double[] array = new double[length];
             // Fill array with random real numbers
             for (int j = 0; j < length; ++j) {
@@ -24,8 +35,22 @@ public class PA2Source {
 
         // Sort each array in List of unsorted arrays
         for (double[] array : unsorted) {
+            // Timing of each mergeSort
+            long start = System.nanoTime();
+            double[] tarr = mergeSort(array);
+            long end = System.nanoTime();
+            long time = end - start;
+            times.add(time);
+
             // Add sorted array to List of sorted arrays
             sorted.add(mergeSort(array));
+
+            // Create output line
+            int n = tarr.length;
+            double logn = Math.log((double)n);
+            double nlogn = n * logn;
+            String otpt = String.valueOf(n) + ", " + String.valueOf(logn) + ", " + String.valueOf(time) + ", " + String.valueOf(nlogn / time);
+            output.add(otpt);
         }
 
         // Scanner for user input
@@ -49,6 +74,12 @@ public class PA2Source {
         printArray(unsorted.get(t));
         System.out.print("Sorted:   ");
         printArray(sorted.get(t));
+
+        try {
+            Files.write(Paths.get("Mergesort_Time.csv"), output, StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private static void printArray(double[] array) {
