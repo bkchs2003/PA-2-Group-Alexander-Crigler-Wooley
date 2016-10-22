@@ -66,26 +66,29 @@ public class PA2Source {
                 System.out.println("Number out of range!");
                 continue;
             }
-            break;
-        }
-
-        // Output: print unsorted array first, then sorted array
-        System.out.print("Unsorted: ");
-        printArray(unsorted.get(t));
-        System.out.print("Sorted:   ");
-        printArray(sorted.get(t));
-
-        try {
-            Files.write(Paths.get("Mergesort_Time.csv"), output, StandardCharsets.UTF_8);
-        } catch (IOException e) {
-            e.printStackTrace();
+            // Output: print unsorted array first, then sorted array
+            else {
+                // matching the input 1 through 9 to the array index 0 through 8
+                t = t-1;
+                System.out.print("Unsorted: ");
+                printArray(unsorted.get(t));
+                System.out.print("Sorted:   ");
+                printArray(sorted.get(t));
+                try {
+                    Files.write(Paths.get("Mergesort_Time.csv"), output, StandardCharsets.UTF_8);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            
+                
         }
     }
 
     private static void printArray(double[] array) {
         System.out.print("[ ");
         for (double d : array) {
-            System.out.print(d + " ");
+            System.out.print(d + "\n");
         }
         System.out.print("]\n");
     }
